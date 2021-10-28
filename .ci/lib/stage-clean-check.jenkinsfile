@@ -1,10 +1,12 @@
 stage('clean-check') {
-    sh 'rm -rf "$PREFIX"'
+    /* NOTE: We cannot delete $PREFIX (i.e. installed Gramine) until after the following block,
+     * because `make clean` in regression tests uses the `gramine-test` utility. */
     sh '''
-        ./Scripts/gitignore-test
-    '''
-    sh '''
+        REL_PREFIX=$(realpath "$PREFIX" --relative-to=.)
+
         cd "$(./Scripts/clean-check-test-copy)"
+
+        rm -rf "$REL_PREFIX"
 
         rm -f Pal/src/host/Linux-SGX/signer/enclave-key.pem
 
@@ -42,5 +44,9 @@ stage('clean-check') {
             subprojects/packagecache
 
         ./Scripts/clean-check
+    '''
+    sh 'rm -rf "$PREFIX"'
+    sh '''
+        ./Scripts/gitignore-test
     '''
 }
