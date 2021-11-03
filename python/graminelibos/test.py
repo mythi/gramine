@@ -14,10 +14,18 @@ import toml
 from . import ninja_syntax, _CONFIG_ARCH_LIBDIR, _CONFIG_PKGLIBDIR
 
 
-def get_list(data, *keys):
+def get_config_value(data, *keys, default=None):
+    '''
+    Helper function for accessing a value inside TOML data. For example:
+
+        get_config_value(data, 'arch', 'x86_64', 'manifests', default=[])
+
+    This will attempt to access `arch.x86_64.manifests` and return [] if the value is not found.
+    '''
+
     for key in keys:
         if key not in data:
-            return []
+            return default
         data = data[key]
     return data
 
@@ -47,13 +55,13 @@ class TestConfig:
 
         data = toml.load(path)
 
-        self.manifests = get_list(data, 'manifests')
+        self.manifests = get_config_value(data, 'manifests', default=[])
         arch = platform.processor()
-        self.manifests += get_list(data, 'arch', arch, 'manifests')
+        self.manifests += get_config_value(data, 'arch', arch, 'manifests', default=[])
 
-        self.sgx_manifests = get_list(data, 'sgx', 'manifests')
+        self.sgx_manifests = get_config_value(data, 'sgx', 'manifests', default=[])
 
-        binary_dir = data.get('binary_dir')
+        binary_dir = get_config_value(data, 'binary_dir')
         if binary_dir:
             self.binary_dir = binary_dir.replace('@GRAMINE_PKGLIBDIR@', _CONFIG_PKGLIBDIR)
         else:

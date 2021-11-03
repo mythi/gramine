@@ -33,7 +33,7 @@ def regenerate():
     test.gen_build_file()
 
 
-@main.command(help='Rebuild manifests. This rebuild either all manifests, or the specified ones.')
+@main.command(help='Rebuild manifests. This rebuilds either all manifests, or the specified ones.')
 @click.pass_context
 @click.option('--force', '-f', is_flag=True, help='Force rebuild')
 @click.option('--verbose', '-v', is_flag=True, help='Show all command lines while building')
