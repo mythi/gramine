@@ -1,4 +1,4 @@
-loader.preload = file:@GRAMINEDIR@/Runtime/libsysdb.so
+pal.entrypoint = file:@GRAMINEDIR@/Runtime/libsysdb.so
 
 loader.insecure__use_cmdline_argv = true
 
