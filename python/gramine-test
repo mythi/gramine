@@ -36,8 +36,7 @@ def regenerate():
 @main.command(help='Rebuild manifests. This rebuilds either all manifests, or the specified ones.')
 @click.pass_context
 @click.option('--force/--no-force', '-f', help='Force rebuild')
-@click.option('--verbose/--quiet', '-v/-q',
-              help='Show all command lines while building')
+@click.option('--verbose/--quiet', '-v/-q', help='Show all command lines while building')
 @click.argument('names', type=str, nargs=-1)
 def build(ctx, force, verbose, names):
     sgx = ctx.obj['sgx']
@@ -83,8 +82,7 @@ def run(ctx, force, verbose, name, args):
     context_settings={'ignore_unknown_options': True},
 )
 @click.option('--force/--no-force', '-f', help='Force rebuild')
-@click.option('--verbose/--quiet', '-v/-q', is_flag=True,
-              help='Show all command lines while building')
+@click.option('--verbose/--quiet', '-v/-q', help='Show all command lines while building')
 @click.argument('args', nargs=-1, type=click.UNPROCESSED)
 @click.pass_context
 def pytest(ctx, force, verbose, args):
