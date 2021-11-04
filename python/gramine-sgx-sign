@@ -19,7 +19,7 @@ from graminelibos import Manifest, get_tbssigstruct, sign_with_local_key, SGX_LI
 @click.option('--manifest', '-m', 'manifest_file', type=click.File('r', encoding='utf-8'),
               required=True, help='Input .manifest file')
 @click.option('--sigfile', '-s', help='Output .sig file')
-@click.option('--depfile', '-D', type=click.Path(), help='Generate dependencies for .manifest.sgx '
+@click.option('--depfile', type=click.File('w'), help='Generate dependencies for .manifest.sgx '
               'and .sig files')
 @click.option('--quiet', '-q', is_flag=True, help='Don\'t display details')
 def main(output, libpal, key, manifest_file, sigfile, depfile, quiet):
@@ -47,22 +47,21 @@ def main(output, libpal, key, manifest_file, sigfile, depfile, quiet):
         f.write(sigstruct.to_bytes())
 
     if depfile:
-        with open(depfile, 'w') as f:
-            # `.manifest.sgx` depends on all files we just expanded
-            f.write(f'{output}:')
-            for filename in expanded:
-                f.write(f'  \\\n\t{filename}')
-            f.write('\n')
-            f.write('\n')
+        # `.manifest.sgx` depends on all files we just expanded
+        depfile.write(f'{output}:')
+        for filename in expanded:
+            depfile.write(f'  \\\n\t{filename}')
+        depfile.write('\n')
+        depfile.write('\n')
 
-            # `.sig` additionally depends on libpal and key
-            f.write(f'{sigfile}:')
-            f.write(f'  \\\n\t{libpal}')
-            f.write(f'  \\\n\t{key}')
-            for filename in expanded:
-                f.write(f'  \\\n\t{filename}')
-            f.write('\n')
-            f.write('\n')
+        # `.sig` additionally depends on libpal and key
+        depfile.write(f'{sigfile}:')
+        depfile.write(f' \\\n\t{libpal}')
+        depfile.write(f' \\\n\t{key}')
+        for filename in expanded:
+            depfile.write(f' \\\n\t{filename}')
+        depfile.write('\n')
+        depfile.write('\n')
 
 
 if __name__ == '__main__':

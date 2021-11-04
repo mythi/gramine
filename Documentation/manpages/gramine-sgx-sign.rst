@@ -42,7 +42,7 @@ Command line arguments
     `manifest_file` will be used with ".manifest" (if present) removed from
     the end and with ".sig" appended.
 
-.. option:: --depfile depfile, -D depfile
+.. option:: --depfile depfile
 
     Generate a file that describes the dependencies for the output manifest and
     SIGSTRUCT, i.e. files that should trigger rebuilding if they're modified.
