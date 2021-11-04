@@ -69,8 +69,12 @@ class TestConfig:
 
         self.arch_libdir = '/' + _CONFIG_ARCH_LIBDIR
 
-        toplevel = subprocess.check_output(['git', 'rev-parse', '--show-toplevel']).decode().strip()
-        self.key = os.path.join(toplevel, 'Pal/src/host/Linux-SGX/signer/enclave-key.pem')
+        self.key = os.environ.get('SGX_SIGNER_KEY', None)
+        if not self.key:
+            p = subprocess.check_output([
+                'git', 'rev-parse', '--show-toplevel',
+            ]).decode().strip()
+            self.key = os.path.join(toplevel, 'Pal/src/host/Linux-SGX/signer/enclave-key.pem')
 
         self.all_manifests = self.manifests + self.sgx_manifests
 
