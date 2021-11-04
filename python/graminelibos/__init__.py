@@ -5,7 +5,7 @@ __version__ = '@VERSION@'
 
 _CONFIG_PKGLIBDIR = '@PKGLIBDIR@'
 _CONFIG_LIBDIR = '@LIBDIR@'
-_CONFIG_ARCH_LIBDIR = '@ARCH_LIBDIR@'
+_CONFIG_SYSLIBDIR = '@SYSLIBDIR@'
 _CONFIG_SGX_ENABLED = '@SGX_ENABLED@' == '1'
 
 if __version__.startswith('@') and not _os.getenv('GRAMINE_IMPORT_FOR_SPHINX_ANYWAY') == '1':
