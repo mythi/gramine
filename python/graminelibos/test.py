@@ -71,7 +71,7 @@ class TestConfig:
 
         self.key = os.environ.get('SGX_SIGNER_KEY', None)
         if not self.key:
-            p = subprocess.check_output([
+            toplevel = subprocess.check_output([
                 'git', 'rev-parse', '--show-toplevel',
             ]).decode().strip()
             self.key = os.path.join(toplevel, 'Pal/src/host/Linux-SGX/signer/enclave-key.pem')
