@@ -60,7 +60,7 @@ static int pipe_close(PAL_HANDLE handle) {
 }
 
 /* 'delete' operation of pipe stream. */
-static int pipe_delete(PAL_HANDLE handle, enum pal_delete delete_mode) {
+static int pipe_delete(PAL_HANDLE handle, enum pal_delete_mode delete_mode) {
     return -PAL_ERROR_NOTIMPLEMENTED;
 }
 

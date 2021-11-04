@@ -156,8 +156,8 @@ void debug_print_syscall_after(unsigned long sysno, ...);
  * Note that using `clear_event` probably requires external locking to avoid races.
  */
 static inline int create_event(AEVENTTYPE* e) {
-     return pal_to_unix_errno(DkStreamOpen(URI_PREFIX_PIPE, PAL_ACCESS_RDWR, 0, PAL_CREATE_ALWAYS,
-                              0, &e->event));
+     return pal_to_unix_errno(DkStreamOpen(URI_PREFIX_PIPE, PAL_ACCESS_RDWR, /*share_flags=*/0,
+                              PAL_CREATE_ALWAYS, /*options=*/0, &e->event));
 }
 
 static inline PAL_HANDLE event_handle(AEVENTTYPE* e) {

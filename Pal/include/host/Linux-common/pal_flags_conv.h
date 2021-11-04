@@ -50,13 +50,16 @@ static inline int PAL_ACCESS_TO_LINUX_OPEN(enum pal_access access) {
 }
 
 static inline int PAL_CREATE_TO_LINUX_OPEN(enum pal_create_mode create) {
-    if (create == PAL_OPEN_EXISTING)
-        return 0;
-    if (create == PAL_CREATE_TRY)
-        return O_CREAT;
-    if (create == PAL_CREATE_ALWAYS)
-        return O_CREAT | O_EXCL;
-    BUG();
+    switch (create) {
+        case PAL_OPEN_EXISTING:
+            return 0;
+        case PAL_CREATE_TRY:
+            return O_CREAT;
+        case PAL_CREATE_ALWAYS:
+            return O_CREAT | O_EXCL;
+        default:
+            BUG();
+    }
 }
 
 static inline int PAL_OPTION_TO_LINUX_OPEN(pal_stream_options_t options) {

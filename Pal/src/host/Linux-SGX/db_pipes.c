@@ -440,10 +440,10 @@ static int pipe_close(PAL_HANDLE handle) {
  * \param[in] delete_mode  See #pal_delete.
  * \return                 0 on success, negative PAL error code otherwise.
  */
-static int pipe_delete(PAL_HANDLE handle, enum pal_delete delete_mode) {
+static int pipe_delete(PAL_HANDLE handle, enum pal_delete_mode delete_mode) {
     int shutdown;
     switch (delete_mode) {
-        case PAL_DELETE_BOTH:
+        case PAL_DELETE_ALL:
             shutdown = SHUT_RDWR;
             break;
         case PAL_DELETE_READ:

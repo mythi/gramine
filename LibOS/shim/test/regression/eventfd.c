@@ -107,7 +107,7 @@ static int eventfd_using_poll(void) {
         for (int i = 0; i < MAX_EFDS; i++) {
             if (pollfds[i].revents & POLLIN) {
                 pollfds[i].revents = 0;
-                errno              = 0;
+                errno = 0;
                 if (read(pollfds[i].fd, &count, sizeof(count)) != sizeof(count)) {
                     perror("read error");
                     ret = 1;

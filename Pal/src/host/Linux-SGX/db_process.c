@@ -341,10 +341,10 @@ static int proc_close(PAL_HANDLE handle) {
     return 0;
 }
 
-static int proc_delete(PAL_HANDLE handle, enum pal_delete delete_mode) {
+static int proc_delete(PAL_HANDLE handle, enum pal_delete_mode delete_mode) {
     int shutdown;
     switch (delete_mode) {
-        case PAL_DELETE_BOTH:
+        case PAL_DELETE_ALL:
             shutdown = SHUT_RDWR;
             break;
         case PAL_DELETE_READ:

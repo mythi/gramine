@@ -49,7 +49,7 @@ int main(int argc, char** argv, char** envp) {
 
     pal_printf("%s\n", str);
 
-    ret = DkStreamDelete(in, PAL_DELETE_BOTH);
+    ret = DkStreamDelete(in, PAL_DELETE_ALL);
     if (ret < 0) {
         pal_printf("DkStreamDelete failed\n");
         return 1;

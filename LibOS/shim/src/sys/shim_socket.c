@@ -520,8 +520,8 @@ long shim_do_bind(int sockfd, struct sockaddr* addr, int _addrlen) {
     }
 
     PAL_HANDLE pal_hdl = NULL;
-    ret = DkStreamOpen(qstrgetstr(&hdl->uri), PAL_ACCESS_RDWR, 0, PAL_CREATE_ALWAYS, options,
-                       &pal_hdl);
+    ret = DkStreamOpen(qstrgetstr(&hdl->uri), PAL_ACCESS_RDWR, /*share_flags=*/0, PAL_CREATE_ALWAYS,
+                       options, &pal_hdl);
 
     if (ret < 0) {
         ret = (ret == -PAL_ERROR_STREAMEXIST) ? -EADDRINUSE : pal_to_unix_errno(ret);
@@ -727,7 +727,7 @@ long shim_do_connect(int sockfd, struct sockaddr* addr, int _addrlen) {
         if (addr->sa_family == AF_UNSPEC) {
             sock->sock_state = SOCK_CREATED;
             if (sock->sock_type == SOCK_STREAM && hdl->pal_handle) {
-                DkStreamDelete(hdl->pal_handle, PAL_DELETE_BOTH); // TODO: handle errors
+                DkStreamDelete(hdl->pal_handle, PAL_DELETE_ALL); // TODO: handle errors
                 DkObjectClose(hdl->pal_handle);
                 hdl->pal_handle = NULL;
                 pal_handle_updated = true;
@@ -790,7 +790,7 @@ long shim_do_connect(int sockfd, struct sockaddr* addr, int _addrlen) {
     if (state == SOCK_BOUND) {
         /* if the socket is bound, the stream needs to be shut and rebound. */
         assert(hdl->pal_handle);
-        DkStreamDelete(hdl->pal_handle, PAL_DELETE_BOTH); // TODO: handle errors
+        DkStreamDelete(hdl->pal_handle, PAL_DELETE_ALL); // TODO: handle errors
         DkObjectClose(hdl->pal_handle);
         hdl->pal_handle = NULL;
         pal_handle_updated = true;
@@ -1666,7 +1666,7 @@ long shim_do_shutdown(int sockfd, int how) {
             hdl->acc_mode &= ~MAY_WRITE;
             break;
         case SHUT_RDWR:
-            ret = DkStreamDelete(hdl->pal_handle, PAL_DELETE_BOTH);
+            ret = DkStreamDelete(hdl->pal_handle, PAL_DELETE_ALL);
             if (ret < 0) {
                 ret = pal_to_unix_errno(ret);
                 goto out_locked;

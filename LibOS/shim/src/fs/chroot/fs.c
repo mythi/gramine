@@ -599,7 +599,7 @@ static int chroot_unlink(struct shim_dentry* dir, struct shim_dentry* dent) {
     if (ret < 0)
         goto out;
 
-    ret = DkStreamDelete(palhdl, PAL_DELETE_BOTH);
+    ret = DkStreamDelete(palhdl, PAL_DELETE_ALL);
     DkObjectClose(palhdl);
     if (ret < 0) {
         ret = pal_to_unix_errno(ret);

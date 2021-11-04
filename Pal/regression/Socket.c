@@ -55,7 +55,7 @@ int main(int argc, char** argv, char** envp) {
             DkObjectClose(tcp2);
         }
 
-        ret = DkStreamDelete(tcp1, PAL_DELETE_BOTH);
+        ret = DkStreamDelete(tcp1, PAL_DELETE_ALL);
         if (ret < 0) {
             pal_printf("DkStreamDelete failed\n");
             return 1;
@@ -140,7 +140,7 @@ int main(int argc, char** argv, char** envp) {
             DkObjectClose(udp3);
         }
 
-        ret = DkStreamDelete(udp1, PAL_DELETE_BOTH);
+        ret = DkStreamDelete(udp1, PAL_DELETE_ALL);
         if (ret < 0) {
             pal_printf("DkStreamDelete failed\n");
             return 1;

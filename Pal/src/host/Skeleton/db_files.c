@@ -33,7 +33,7 @@ static int file_close(PAL_HANDLE handle) {
 }
 
 /* 'delete' operation for file streams */
-static int file_delete(PAL_HANDLE handle, enum pal_delete delete_mode) {
+static int file_delete(PAL_HANDLE handle, enum pal_delete_mode delete_mode) {
     return -PAL_ERROR_NOTIMPLEMENTED;
 }
 
@@ -111,7 +111,7 @@ static int dir_close(PAL_HANDLE handle) {
 }
 
 /* 'delete' operation of directory streams */
-static int dir_delete(PAL_HANDLE handle, enum pal_delete delete_mode) {
+static int dir_delete(PAL_HANDLE handle, enum pal_delete_mode delete_mode) {
     return -PAL_ERROR_NOTIMPLEMENTED;
 }
 

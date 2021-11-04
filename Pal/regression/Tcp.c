@@ -87,7 +87,7 @@ int main(int argc, char** argv) {
             return 1;
         }
 
-        ret = DkStreamDelete(srv, PAL_DELETE_BOTH);
+        ret = DkStreamDelete(srv, PAL_DELETE_ALL);
         if (ret < 0) {
             pal_printf("DkStreamDelete failed\n");
             return 1;
@@ -121,7 +121,7 @@ int main(int argc, char** argv) {
 
             pal_printf("read from server: %s\n", buffer);
 
-            ret = DkStreamDelete(cli, PAL_DELETE_BOTH);
+            ret = DkStreamDelete(cli, PAL_DELETE_ALL);
             if (ret < 0) {
                 pal_printf("DkStreamDelete failed\n");
                 return 1;

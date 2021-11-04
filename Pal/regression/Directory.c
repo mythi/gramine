@@ -57,7 +57,7 @@ int main(int argc, char** argv, char** envp) {
     PAL_HANDLE dir4 = NULL;
     ret = DkStreamOpen("dir:dir_nonexist.tmp", PAL_ACCESS_RDONLY,
                        PAL_SHARE_OWNER_R | PAL_SHARE_OWNER_W | PAL_SHARE_OWNER_X,
-                       PAL_CREATE_ALWAYS, 0, &dir4);
+                       PAL_CREATE_ALWAYS, /*options=*/0, &dir4);
     if (ret >= 0 && dir4) {
         pal_printf("Directory Creation Test 1 OK\n");
         DkObjectClose(dir4);
@@ -66,7 +66,7 @@ int main(int argc, char** argv, char** envp) {
     PAL_HANDLE dir5 = NULL;
     ret = DkStreamOpen("dir:dir_nonexist.tmp", PAL_ACCESS_RDONLY,
                        PAL_SHARE_OWNER_R | PAL_SHARE_OWNER_W | PAL_SHARE_OWNER_X,
-                       PAL_CREATE_ALWAYS, 0, &dir5);
+                       PAL_CREATE_ALWAYS, /*options=*/0, &dir5);
     if (ret >= 0) {
         DkObjectClose(dir5);
     } else {
@@ -75,7 +75,7 @@ int main(int argc, char** argv, char** envp) {
 
     PAL_HANDLE dir6 = NULL;
     ret = DkStreamOpen("dir:dir_nonexist.tmp", PAL_ACCESS_RDWR,
-                       PAL_SHARE_OWNER_R | PAL_SHARE_OWNER_W, PAL_CREATE_TRY, 0, &dir6);
+                       PAL_SHARE_OWNER_R | PAL_SHARE_OWNER_W, PAL_CREATE_TRY, /*options=*/0, &dir6);
     if (ret >= 0 && dir6) {
         pal_printf("Directory Creation Test 3 OK\n");
         DkObjectClose(dir6);
@@ -85,7 +85,7 @@ int main(int argc, char** argv, char** envp) {
     ret = DkStreamOpen("dir:dir_delete.tmp", PAL_ACCESS_RDONLY, /*share_flags=*/0,
                        /*create=*/PAL_OPEN_EXISTING, /*options=*/0, &dir7);
     if (ret >= 0 && dir7) {
-        ret = DkStreamDelete(dir7, PAL_DELETE_BOTH);
+        ret = DkStreamDelete(dir7, PAL_DELETE_ALL);
         if (ret < 0) {
             pal_printf("DkStreamDelete failed\n");
             return 1;

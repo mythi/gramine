@@ -53,7 +53,7 @@ struct handle_ops {
      * stream, while 'delete' actually destroy the stream, such as deleting a file or shutting
      * down a socket */
     int (*close)(PAL_HANDLE handle);
-    int (*delete)(PAL_HANDLE handle, enum pal_delete delete_mode);
+    int (*delete)(PAL_HANDLE handle, enum pal_delete_mode delete_mode);
 
     /*
      * 'map' and 'unmap' will map or unmap the handle into memory space, it's not necessary mapped
@@ -170,7 +170,7 @@ int _DkGetTopologyInfo(PAL_TOPO_INFO* topo_info);
 int _DkStreamOpen(PAL_HANDLE* handle, const char* uri, enum pal_access access,
                   pal_share_flags_t share, enum pal_create_mode create,
                   pal_stream_options_t options);
-int _DkStreamDelete(PAL_HANDLE handle, enum pal_delete delete_mode);
+int _DkStreamDelete(PAL_HANDLE handle, enum pal_delete_mode delete_mode);
 int64_t _DkStreamRead(PAL_HANDLE handle, uint64_t offset, uint64_t count, void* buf, char* addr,
                       int addrlen);
 int64_t _DkStreamWrite(PAL_HANDLE handle, uint64_t offset, uint64_t count, const void* buf,

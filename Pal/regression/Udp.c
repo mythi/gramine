@@ -73,7 +73,7 @@ int main(int argc, char** argv) {
             return 1;
         }
 
-        ret = DkStreamDelete(srv, PAL_DELETE_BOTH);
+        ret = DkStreamDelete(srv, PAL_DELETE_ALL);
         if (ret < 0) {
             pal_printf("DkStreamDelete failed\n");
             return 1;

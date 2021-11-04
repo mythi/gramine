@@ -865,17 +865,17 @@ static int64_t udp_sendbyaddr(PAL_HANDLE handle, uint64_t offset, size_t len, co
     return bytes;
 }
 
-static int socket_delete(PAL_HANDLE handle, enum pal_delete delete_mode) {
+static int socket_delete(PAL_HANDLE handle, enum pal_delete_mode delete_mode) {
     if (handle->sock.fd == PAL_IDX_POISON)
         return 0;
 
-    if (HANDLE_HDR(handle)->type != PAL_TYPE_TCP && delete_mode != PAL_DELETE_BOTH)
+    if (HANDLE_HDR(handle)->type != PAL_TYPE_TCP && delete_mode != PAL_DELETE_ALL)
         return -PAL_ERROR_INVAL;
 
     if (HANDLE_HDR(handle)->type == PAL_TYPE_TCP || HANDLE_HDR(handle)->type == PAL_TYPE_TCPSRV) {
         int shutdown;
         switch (delete_mode) {
-            case PAL_DELETE_BOTH:
+            case PAL_DELETE_ALL:
                 shutdown = SHUT_RDWR;
                 break;
             case PAL_DELETE_READ:

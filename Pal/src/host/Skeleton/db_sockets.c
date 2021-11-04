@@ -108,7 +108,7 @@ static int64_t udp_sendbyaddr(PAL_HANDLE handle, uint64_t offset, size_t len, co
     return -PAL_ERROR_NOTIMPLEMENTED;
 }
 
-static int socket_delete(PAL_HANDLE handle, enum pal_delete delete_mode) {
+static int socket_delete(PAL_HANDLE handle, enum pal_delete_mode delete_mode) {
     return -PAL_ERROR_NOTIMPLEMENTED;
 }
 

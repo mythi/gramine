@@ -354,8 +354,8 @@ int DkStreamRead(PAL_HANDLE handle, PAL_NUM offset, PAL_NUM* count, PAL_PTR buff
 int DkStreamWrite(PAL_HANDLE handle, PAL_NUM offset, PAL_NUM* count, PAL_PTR buffer,
                   const char* dest);
 
-enum pal_delete {
-    PAL_DELETE_BOTH,  /*!< delete the whole resource / shut down both directions */
+enum pal_delete_mode {
+    PAL_DELETE_ALL,  /*!< delete the whole resource / shut down both directions */
     PAL_DELETE_READ,  /*!< shut down the read side only */
     PAL_DELETE_WRITE, /*!< shut down the write side only */
 };
@@ -365,7 +365,7 @@ enum pal_delete {
  *
  * \param access which side to shut down (see #pal_delete values)
  */
-int DkStreamDelete(PAL_HANDLE handle, enum pal_delete delete_mode);
+int DkStreamDelete(PAL_HANDLE handle, enum pal_delete_mode delete_mode);
 
 /*!
  * \brief Map a file to a virtual memory address in the current process.

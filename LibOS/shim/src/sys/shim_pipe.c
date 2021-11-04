@@ -76,7 +76,7 @@ out:
         if (hdl2)
             DkObjectClose(hdl2);
     }
-    DkStreamDelete(hdl0, PAL_DELETE_BOTH); // TODO: handle errors
+    DkStreamDelete(hdl0, PAL_DELETE_ALL); // TODO: handle errors
     DkObjectClose(hdl0);
     return ret;
 }

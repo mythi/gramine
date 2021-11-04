@@ -180,7 +180,7 @@ int DkStreamWaitForClient(PAL_HANDLE handle, PAL_HANDLE* client) {
     return _DkStreamWaitForClient(handle, client);
 }
 
-int _DkStreamDelete(PAL_HANDLE handle, enum pal_delete delete_mode) {
+int _DkStreamDelete(PAL_HANDLE handle, enum pal_delete_mode delete_mode) {
     const struct handle_ops* ops = HANDLE_OPS(handle);
 
     if (!ops)
@@ -192,7 +192,7 @@ int _DkStreamDelete(PAL_HANDLE handle, enum pal_delete delete_mode) {
     return ops->delete(handle, delete_mode);
 }
 
-int DkStreamDelete(PAL_HANDLE handle, enum pal_delete delete_mode) {
+int DkStreamDelete(PAL_HANDLE handle, enum pal_delete_mode delete_mode) {
     assert(handle);
 
     return _DkStreamDelete(handle, delete_mode);
