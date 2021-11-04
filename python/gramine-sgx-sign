@@ -21,8 +21,8 @@ from graminelibos import Manifest, get_tbssigstruct, sign_with_local_key, SGX_LI
 @click.option('--sigfile', '-s', help='Output .sig file')
 @click.option('--depfile', type=click.File('w'), help='Generate dependencies for .manifest.sgx '
               'and .sig files')
-@click.option('--quiet', '-q', is_flag=True, help='Don\'t display details')
-def main(output, libpal, key, manifest_file, sigfile, depfile, quiet):
+@click.option('--verbose/--quiet', '-v/-q', default=True, help='Display details (on by default)')
+def main(output, libpal, key, manifest_file, sigfile, depfile, verbose):
     # pylint: disable=too-many-arguments
 
     manifest = Manifest.load(manifest_file)
@@ -40,7 +40,7 @@ def main(output, libpal, key, manifest_file, sigfile, depfile, quiet):
         sigfile += '.sig'
 
     today = datetime.date.today()
-    sigstruct = get_tbssigstruct(output, today, libpal, verbose=not quiet)
+    sigstruct = get_tbssigstruct(output, today, libpal, verbose=verbose)
     sigstruct.sign(sign_with_local_key, key)
 
     with open(sigfile, 'wb') as f:

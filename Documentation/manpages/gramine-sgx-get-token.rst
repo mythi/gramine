@@ -28,6 +28,10 @@ Command line arguments
 
    Path to the output token file.
 
+.. option:: --verbose, -v
+
+    Print details to standard output. This is the default.
+
 .. option:: --quiet, -q
 
     Don't print details to standard output.

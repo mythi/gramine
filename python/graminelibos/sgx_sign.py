@@ -523,7 +523,7 @@ def get_tbssigstruct(manifest_path, date, libpal=SGX_LIBPAL, verbose=False):
         manifest_path (str): Path to the manifest file.
         date (date): Date to put into SIGSTRUCT.
         libpal (:obj:`str`, optional): Path to the libpal file.
-        libpal (:obj:`bool`, optional): If true, print details to stdout.
+        verbose (:obj:`bool`, optional): If true, print details to stdout.
 
     Returns:
         Sigstruct: SIGSTRUCT generated from provided data.

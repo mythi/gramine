@@ -49,6 +49,10 @@ Command line arguments
     The dependency file is in Makefile format, and is suitable for using in
     build systems (Make, Ninja).
 
+.. option:: --verbose, -v
+
+    Print details to standard output. This is the default.
+
 .. option:: --quiet, -q
 
     Don't print details to standard output.
