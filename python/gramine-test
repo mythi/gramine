@@ -9,7 +9,7 @@ import sys
 
 import click
 
-from graminelibos import test, _CONFIG_SGX_ENABLED
+from graminelibos import util_tests, _CONFIG_SGX_ENABLED
 
 
 @click.group(help='Helper program for running Gramine tests.')
@@ -30,7 +30,7 @@ def main(ctx, sgx, directory):
 
 @main.command(help='Rebuild the build.ninja file. Used internally by Ninja.')
 def regenerate():
-    test.gen_build_file()
+    util_tests.gen_build_file()
 
 
 @main.command(help='Rebuild manifests. This rebuilds either all manifests, or the specified ones.')
@@ -47,9 +47,9 @@ def build(ctx, force, verbose, names):
 
 @main.command(help='Remove all generated files.')
 def clean():
-    test.gen_build_file()
+    util_tests.gen_build_file()
     try:
-        test.run_ninja(['-t', 'clean', '-g'])
+        util_tests.run_ninja(['-t', 'clean', '-g'])
     except subprocess.CalledProcessError as e:
         sys.exit(e.returncode)
     for name in ['.ninja_deps', '.ninja_log']:
@@ -74,7 +74,7 @@ def run(ctx, force, verbose, name, args):
     name = strip_suffix(name)
 
     rebuild(sgx, name, force=force, verbose=verbose)
-    test.exec_gramine(sgx, name, args)
+    util_tests.exec_gramine(sgx, name, args)
 
 
 @main.command(
@@ -89,7 +89,7 @@ def pytest(ctx, force, verbose, args):
     sgx = ctx.obj['sgx']
 
     rebuild(sgx, force=force, verbose=verbose)
-    test.exec_pytest(sgx, args)
+    util_tests.exec_pytest(sgx, args)
 
 
 def strip_suffix(name):
@@ -105,7 +105,7 @@ def strip_suffix(name):
 
 
 def rebuild(sgx, *names, force=False, verbose=False):
-    test.gen_build_file()
+    util_tests.gen_build_file()
     verbosity = ['-v'] if verbose else []
     host = 'sgx' if sgx else 'direct'
     if names:
@@ -114,8 +114,8 @@ def rebuild(sgx, *names, force=False, verbose=False):
         targets = [host]
     try:
         if force:
-            test.run_ninja(verbosity + ['-t', 'clean'] + targets)
-        test.run_ninja(verbosity + targets)
+            util_tests.run_ninja(verbosity + ['-t', 'clean'] + targets)
+        util_tests.run_ninja(verbosity + targets)
     except subprocess.CalledProcessError as e:
         sys.exit(e.returncode)
 

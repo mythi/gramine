@@ -21,7 +21,7 @@ if enable_tests
     python_src += [
         'ninja_syntax.py',
         'regression.py',
-        'test.py',
+        'util_tests.py',
     ]
 endif
 
