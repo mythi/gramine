@@ -1,6 +1,6 @@
 # RA-TLS manifest file example
 
-pal.entrypoint = "file:{{ gramine.libos }}"
+loader.entrypoint = "file:{{ gramine.libos }}"
 libos.entrypoint = "server"
 
 loader.log_level = "{{ log_level }}"

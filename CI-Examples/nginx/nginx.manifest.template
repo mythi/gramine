@@ -1,6 +1,6 @@
 # Nginx manifest example
 
-pal.entrypoint = "file:{{ gramine.libos }}"
+loader.entrypoint = "file:{{ gramine.libos }}"
 libos.entrypoint = "{{ install_dir }}/sbin/nginx"
 
 loader.log_level = "{{ log_level }}"

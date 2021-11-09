@@ -1,6 +1,6 @@
 # lighttpd manifest example
 
-pal.entrypoint = "file:{{ gramine.libos }}"
+loader.entrypoint = "file:{{ gramine.libos }}"
 libos.entrypoint = "{{ install_dir }}/sbin/lighttpd"
 
 loader.log_level = "{{ log_level }}"

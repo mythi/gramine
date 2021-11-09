@@ -1,6 +1,6 @@
 # Busybox manifest file example
 
-pal.entrypoint = "file:{{ gramine.libos }}"
+loader.entrypoint = "file:{{ gramine.libos }}"
 libos.entrypoint = "busybox"
 
 loader.log_level = "{{ log_level }}"

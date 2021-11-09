@@ -1,6 +1,6 @@
 # This is a general manifest template for running SQLite.
 
-pal.entrypoint = "file:{{ gramine.libos }}"
+loader.entrypoint = "file:{{ gramine.libos }}"
 libos.entrypoint = "{{ execdir }}/sqlite3"
 
 loader.log_level = "{{ log_level }}"

@@ -1,6 +1,6 @@
 # Blender manifest example
 
-pal.entrypoint = "file:{{ gramine.libos }}"
+loader.entrypoint = "file:{{ gramine.libos }}"
 libos.entrypoint = "/blender/blender"
 
 loader.log_level = "{{ log_level }}"

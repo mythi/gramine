@@ -1,6 +1,6 @@
 # Memcached manifest file example
 
-pal.entrypoint = "file:{{ gramine.libos }}"
+loader.entrypoint = "file:{{ gramine.libos }}"
 libos.entrypoint = "memcached"
 
 loader.log_level = "{{ log_level }}"

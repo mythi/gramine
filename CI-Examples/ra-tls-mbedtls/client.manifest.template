@@ -1,6 +1,6 @@
 # Client manifest file (both for EPID and DCAP)
 
-pal.entrypoint = "file:{{ gramine.libos }}"
+loader.entrypoint = "file:{{ gramine.libos }}"
 libos.entrypoint = "client"
 
 loader.log_level = "{{ log_level }}"
