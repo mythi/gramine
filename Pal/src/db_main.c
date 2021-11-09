@@ -503,9 +503,9 @@ noreturn void pal_main(uint64_t instance_id,       /* current instance id */
     free(env_src_file);
 
     char* entrypoint_name = NULL;
-    ret = toml_string_in(g_pal_state.manifest_root, "pal.entrypoint", &entrypoint_name);
+    ret = toml_string_in(g_pal_state.manifest_root, "loader.entrypoint", &entrypoint_name);
     if (ret < 0)
-        INIT_FAIL_MANIFEST(PAL_ERROR_INVAL, "Cannot parse 'pal.entrypoint'");
+        INIT_FAIL_MANIFEST(PAL_ERROR_INVAL, "Cannot parse 'loader.entrypoint'");
 
     if (!entrypoint_name) {
         ret = toml_string_in(g_pal_state.manifest_root, "loader.preload", &entrypoint_name);
@@ -513,15 +513,14 @@ noreturn void pal_main(uint64_t instance_id,       /* current instance id */
             INIT_FAIL_MANIFEST(PAL_ERROR_INVAL, "Cannot parse 'loader.preload'");
 
         if (entrypoint_name)
-            log_warning("'loader.preload' is deprecated; consider switching to 'pal.entrypoint'");
+            log_warning("'loader.preload' is deprecated; please switch to 'loader.entrypoint'");
     }
 
     if (!entrypoint_name)
-        INIT_FAIL(PAL_ERROR_INVAL, "No 'pal.entrypoint'/'loader.preload' is specified in the "
-                                   "manifest");
+        INIT_FAIL(PAL_ERROR_INVAL, "No 'loader.entrypoint' is specified in the manifest");
 
     if (!strstartswith(entrypoint_name, URI_PREFIX_FILE))
-        INIT_FAIL(PAL_ERROR_INVAL, "'pal.entrypoint'/'loader.preload' is missing 'file:' prefix");
+        INIT_FAIL(PAL_ERROR_INVAL, "'loader.entrypoint' is missing the 'file:' prefix");
 
     g_pal_control.host_type       = XSTRINGIFY(HOST_TYPE);
     g_pal_control.manifest_root   = g_pal_state.manifest_root;
@@ -555,7 +554,7 @@ noreturn void pal_main(uint64_t instance_id,       /* current instance id */
 
     ret = load_entrypoint(entrypoint_name);
     if (ret < 0)
-        INIT_FAIL(-ret, "Unable to load pal.entrypoint");
+        INIT_FAIL(-ret, "Unable to load loader.entrypoint");
 
     /* Now we will start the execution */
     start_execution(arguments, final_environments);

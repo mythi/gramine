@@ -180,6 +180,12 @@ static int find_symbol_in_loaded_maps(struct link_map* map, ElfW(Rela)* rela,
         return 0;
     }
 
+    if (map == &g_pal_map) {
+        /* PAL ELF object tried to find symbol in itself but couldn't */
+        log_error("Could not resolve symbol %s in PAL ELF object", symbol_name);
+        return -PAL_ERROR_DENIED;
+    }
+
     /* next try to find in PAL ELF object */
     for (uint32_t i = 0; i < g_pal_map.symbol_table_cnt; i++) {
         if (g_pal_map.symbol_table[i].st_shndx == SHN_UNDEF)
@@ -468,6 +474,7 @@ static int create_and_relocate_entrypoint(PAL_HANDLE handle, const char* elf_fil
 out:
     if (ret < 0) {
         free((void*)g_entrypoint_map.l_name);
+        g_entrypoint_map.l_name = NULL;
     }
     free(loadcmds);
     return ret;
@@ -617,35 +624,27 @@ void pal_describe_location(uintptr_t addr, char* buf, size_t buf_size) {
     default_describe_location(addr, buf, buf_size);
 }
 
-#ifndef CALL_ENTRY
 #ifdef __x86_64__
-void* rsp_before_call = NULL;
-void* rbp_before_call = NULL;
-
+/*
+ * - RFLAGS is reset (via `push 0, pop`)
+ * - RDX is supposed to point to the `atexit` callback, but our minimal implementation of the
+ *   dynamic loader doesn't need to do anything for process termination, so we just pass NULL
+ * - RBP is set to zero (to indicate end of backtrace to GDB)
+ */
 #define CALL_ENTRY(l, cookies)                                                       \
     ({                                                                               \
-        long ret;                                                                    \
         __asm__ volatile(                                                            \
             "pushq $0\r\n"                                                           \
             "popfq\r\n"                                                              \
-            "movq %%rsp, rsp_before_call(%%rip)\r\n"                                 \
-            "movq %%rbp, rbp_before_call(%%rip)\r\n"                                 \
-            "leaq 1f(%%rip), %%rdx\r\n"                                              \
+            "movq $0, %%rdx\r\n"                                                     \
             "movq $0, %%rbp\r\n"                                                     \
-            "movq %2, %%rsp\r\n"                                                     \
-            "jmp *%1\r\n"                                                            \
-            "1: movq rsp_before_call(%%rip), %%rsp\r\n"                              \
-            "   movq rbp_before_call(%%rip), %%rbp\r\n"                              \
-                                                                                     \
-            : "=a"(ret)                                                              \
-            : "a"((l)->l_entry), "b"(cookies)                                        \
-            : "rcx", "rdx", "rdi", "rsi", "r8", "r9", "r10", "r11", "memory", "cc"); \
-        ret;                                                                         \
+            "movq %1, %%rsp\r\n"                                                     \
+            "jmp *%0\r\n"                                                            \
+            : : "a"((l)->l_entry), "b"(cookies) : "memory" );                        \
     })
 #else
 #error "unsupported architecture"
 #endif
-#endif /* !CALL_ENTRY */
 
 noreturn void start_execution(const char** arguments, const char** environs) {
     int narguments = 0;
@@ -687,7 +686,5 @@ noreturn void start_execution(const char** arguments, const char** environs) {
 
     assert(g_entrypoint_map.l_entry);
     CALL_ENTRY(&g_entrypoint_map, cookies);
-
-    _DkThreadExit(/*clear_child_tid=*/NULL);
-    /* UNREACHABLE */
+    die_or_inf_loop();
 }

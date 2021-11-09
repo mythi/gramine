@@ -184,8 +184,7 @@ class Manifest:
 
         # NOTE: `loader.preload` is deprecated; remove the below in the future
         preload_str = self['loader']['preload']
-        if preload_str:
-            if not any(preload_str == tf['uri'] for tf in trusted_files):
+        if preload_str and not any(preload_str == tf['uri'] for tf in trusted_files):
                 append_trusted_dir_or_file(trusted_files, preload_str)
 
         self['sgx']['trusted_files'] = trusted_files

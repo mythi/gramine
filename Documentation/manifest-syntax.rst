@@ -59,16 +59,22 @@ Gramine outputs log messages of the following types:
    Only ``error`` log level is suitable for production. Other levels may leak
    sensitive data.
 
-PAL entrypoint
-^^^^^^^^^^^^^^
+Loader entrypoint
+^^^^^^^^^^^^^^^^^
 
 ::
 
-   pal.entrypoint= "[URI]"
+   loader.entrypoint = "[URI]"
 
 This specifies the LibOS component that Gramine will load and run before loading
 the first executable of the user application. Currently, there is only one LibOS
 implementation: ``libsysdb.so``.
+
+Note that the loader (the PAL binary) loads the LibOS binary specified in
+``loader.entrypoint`` and passes control to this binary. Next, the LibOS binary
+loads the actual executable (the user application) specified in
+``libos.entrypoint``. Also note that, in constrast to ``libos.entrypoint``, the
+``loader.entrypoint`` option specifies a PAL URI (with the ``file:`` prefix).
 
 LibOS Entrypoint
 ^^^^^^^^^^^^^^^^

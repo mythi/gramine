@@ -41,12 +41,8 @@ _start:
 	lea (%rsi,%rdi,8), %rdx
 	add $8, %rdx
 
-#ifdef SHARED
-	call main@PLT
-#else
 	call main
-#endif
 
-	/* return to the exit function */
-	popq %rbp
-	retq
+	mov %rax, %rdi
+	call DkProcessExit@PLT
+	/* unreachable */
