@@ -8,7 +8,7 @@ int main(int argc, char** argv, char** envp) {
 
     PAL_HANDLE out = NULL;
     int ret = DkStreamOpen("dev:tty", PAL_ACCESS_WRONLY, /*share_flags=*/0,
-                           /*create=*/PAL_OPEN_EXISTING, /*options=*/0, &out);
+                           /*create=*/PAL_CREATE_NEVER, /*options=*/0, &out);
 
     if (ret < 0) {
         pal_printf("DkStreamOpen failed\n");

@@ -217,7 +217,7 @@ static int chroot_temp_open(struct shim_dentry* dent, mode_t type, PAL_HANDLE* o
     if (ret < 0)
         return ret;
 
-    ret = DkStreamOpen(uri, PAL_ACCESS_RDONLY, /*share_flags=*/0, /*create=*/PAL_OPEN_EXISTING,
+    ret = DkStreamOpen(uri, PAL_ACCESS_RDONLY, /*share_flags=*/0, /*create=*/PAL_CREATE_NEVER,
                        /*options=*/0, out_palhdl);
     free(uri);
     return pal_to_unix_errno(ret);
@@ -717,7 +717,7 @@ static int chroot_reopen(struct shim_handle* hdl, PAL_HANDLE* out_palhdl) {
 
     mode_t mode = 0;
     enum pal_access access = LINUX_OPEN_FLAGS_TO_PAL_ACCESS(hdl->flags);
-    enum pal_create_mode create = PAL_OPEN_EXISTING;
+    enum pal_create_mode create = PAL_CREATE_NEVER;
     pal_stream_options_t options = LINUX_OPEN_FLAGS_TO_PAL_OPTIONS(hdl->flags);
     int ret = DkStreamOpen(uri, access, mode, create, options, &palhdl);
     if (ret < 0)

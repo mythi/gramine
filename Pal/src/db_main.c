@@ -352,7 +352,7 @@ static int load_cstring_array(const char* uri, const char*** res) {
     int ret;
 
     ret = _DkStreamOpen(&hdl, uri, PAL_ACCESS_RDONLY, /*share_flags=*/0,
-                        /*create=*/PAL_OPEN_EXISTING, /*options=*/0);
+                        /*create=*/PAL_CREATE_NEVER, /*options=*/0);
     if (ret < 0)
         return ret;
     ret = _DkStreamAttributesQueryByHandle(hdl, &attr);

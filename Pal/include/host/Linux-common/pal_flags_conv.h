@@ -51,7 +51,7 @@ static inline int PAL_ACCESS_TO_LINUX_OPEN(enum pal_access access) {
 
 static inline int PAL_CREATE_TO_LINUX_OPEN(enum pal_create_mode create) {
     switch (create) {
-        case PAL_OPEN_EXISTING:
+        case PAL_CREATE_NEVER:
             return 0;
         case PAL_CREATE_TRY:
             return O_CREAT;

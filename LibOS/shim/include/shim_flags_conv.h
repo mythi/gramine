@@ -50,7 +50,7 @@ static inline enum pal_create_mode LINUX_OPEN_FLAGS_TO_PAL_CREATE(int flags) {
         return PAL_CREATE_ALWAYS;
     if (flags & O_CREAT)
         return PAL_CREATE_TRY;
-    return PAL_OPEN_EXISTING;
+    return PAL_CREATE_NEVER;
 }
 
 static inline pal_stream_options_t LINUX_OPEN_FLAGS_TO_PAL_OPTIONS(int flags) {
