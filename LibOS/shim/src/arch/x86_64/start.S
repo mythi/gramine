@@ -28,7 +28,7 @@ shim_start:
 
     # Arguments for shim_init:
     movq 0(%rsp), %rdi         # argc
-    leaq 8(%rsp), %rsi         # args
+    leaq 8(%rsp), %rsi         # argv
     leaq (%rsi,%rdi,8), %rdx   # envp, after all args (including argv[argc] = NULL)
     addq $8, %rdx
 
