@@ -3,7 +3,7 @@
 
 void* dummy = &dummy;
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv, char** envp) {
     if (DkSegmentRegisterSet(PAL_SEGMENT_FS, dummy) < 0) {
         pal_printf("Error setting FS\n");
         return 1;

@@ -26,8 +26,10 @@ _start:
     xorq %rbp, %rbp
 
     # Arguments for PAL-executable main:
-    movq 0(%rsp), %rdi  # argc
-    leaq 8(%rsp), %rsi  # args
+    movq 0(%rsp), %rdi         # argc
+    leaq 8(%rsp), %rsi         # args
+    leaq (%rsi,%rdi,8), %rdx   # envp, after all args (including argv[argc] = NULL)
+    addq $8, %rdx
 
     # Required by System V AMD64 ABI.
     andq  $~0xF, %rsp
