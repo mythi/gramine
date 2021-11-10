@@ -2,7 +2,7 @@
 #include "pal.h"
 #include "pal_regression.h"
 
-int main(int argc, char** argv, char** envp) {
+int main(int argc, char** argv) {
     PAL_STR args[1] = {0};
 
     // Hack to differentiate parent from child

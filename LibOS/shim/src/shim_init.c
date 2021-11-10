@@ -400,7 +400,7 @@ noreturn void* shim_init(int argc, void* args) {
     }
 
     const char** argv = args;
-    const char** envp = args + sizeof(char*) * ((argc) + 1);
+    const char** envp = args + sizeof(char*) * (argc + 1);
 
     RUN_INIT(init_vma);
     RUN_INIT(init_slab);

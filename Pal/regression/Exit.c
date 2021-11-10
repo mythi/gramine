@@ -2,6 +2,6 @@
 #include "pal.h"
 #include "pal_regression.h"
 
-int main(int argc, char** argv, char** envp) {
+int main(int argc, char** argv) {
     DkProcessExit(112);
 }

@@ -3,7 +3,7 @@
 
 char str[13] = "Hello World\n";
 
-int main(int argc, char** argv, char** envp) {
+int main(int argc, char** argv) {
     pal_printf("start program: Pie\n");
 
     PAL_HANDLE out = NULL;

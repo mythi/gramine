@@ -624,67 +624,61 @@ void pal_describe_location(uintptr_t addr, char* buf, size_t buf_size) {
     default_describe_location(addr, buf, buf_size);
 }
 
-#ifdef __x86_64__
-/*
- * - RFLAGS is reset (via `push 0, pop`)
- * - RDX is supposed to point to the `atexit` callback, but our minimal implementation of the
- *   dynamic loader doesn't need to do anything for process termination, so we just pass NULL
- * - RBP is set to zero (to indicate end of backtrace to GDB)
- */
-#define CALL_ENTRY(l, cookies)                                                       \
-    ({                                                                               \
-        __asm__ volatile(                                                            \
-            "pushq $0\r\n"                                                           \
-            "popfq\r\n"                                                              \
-            "movq $0, %%rdx\r\n"                                                     \
-            "movq $0, %%rbp\r\n"                                                     \
-            "movq %1, %%rsp\r\n"                                                     \
-            "jmp *%0\r\n"                                                            \
-            : : "a"((l)->l_entry), "b"(cookies) : "memory" );                        \
-    })
-#else
-#error "unsupported architecture"
-#endif
-
 noreturn void start_execution(const char** arguments, const char** environs) {
-    int narguments = 0;
-    for (const char** a = arguments; *a; a++, narguments++)
-        ;
+    /* Our PAL loader invokes LibOS entrypoint with the following stack:
+     *
+     *   0(%rsp)               argc
+     *   8(%rsp)               argv[0]
+     *   16(%rsp)              argv[1]
+     *   ...
+     *   (8*argc)(%rsp)        argv[argc] = NULL
+     *   (8*(argc+1))(%rsp)    envp[0]
+     *   (8*(argc+2))(%rsp)    envp[1]
+     *   ...
+     *   (8*(argc+n))(%rsp)    envp[n] = NULL
+     *   (8*(argc+n+1))(%rsp)  auxv[0] = AT_NULL
+     *
+     * See also the corresponding LibOS entrypoint: LibOS/shim/src/arch/x86_64/start.S
+     */
+    size_t arguments_num = 0;
+    for (size_t i = 0; arguments[i]; i++)
+        arguments_num++;
 
-    /* Let's count the number of cookies, first we will have argc & argv */
-    int ncookies = narguments + 3; /* 1 for argc, argc + 2 for argv */
+    size_t environs_num = 0;
+    for (size_t i = 0; environs[i]; i++)
+        environs_num++;
 
-    /* Then we count envp */
-    for (const char** e = environs; *e; e++)
-        ncookies++;
+    /* 1 for argc stack entry, 1 for argv[argc] == NULL, 1 for envp[n] == NULL */
+    size_t stack_entries_size = 3 * sizeof(uintptr_t);
+    stack_entries_size += (arguments_num + environs_num) * sizeof(uintptr_t);
+    stack_entries_size += 1 * sizeof(ElfW(auxv_t));
 
-    ncookies++; /* for NULL-end */
+    uintptr_t* stack_entries = __alloca(stack_entries_size);
 
-    int cookiesz = sizeof(unsigned long int) * ncookies
-                      + sizeof(ElfW(auxv_t)) * 1  /* only AT_NULL */
-                      + sizeof(void*) * 4 + 16;
+    size_t idx = 0;
+    stack_entries[idx++] = (uintptr_t)arguments_num;
+    for (size_t i = 0; i < arguments_num; i++)
+        stack_entries[idx++] = (uintptr_t)arguments[i];
+    stack_entries[idx++] = 0x00;
+    for (size_t i = 0; i < environs_num; i++)
+        stack_entries[idx++] = (uintptr_t)environs[i];
+    stack_entries[idx++] = 0x00;
 
-    unsigned long int* cookies = __alloca(cookiesz);
-    int cnt = 0;
-
-    /* Let's copy the cookies */
-    cookies[cnt++] = (unsigned long int)narguments;
-
-    for (int i = 0; arguments[i]; i++)
-        cookies[cnt++] = (unsigned long int)arguments[i];
-    cookies[cnt++] = 0;
-    for (int i = 0; environs[i]; i++)
-        cookies[cnt++] = (unsigned long int)environs[i];
-    cookies[cnt++] = 0;
-
-    /* NOTE: LibOS implements its own ELF aux vectors. Any info from host's
-     * aux vectors must be passed in PAL_CONTROL. Here we pass an empty list
-     * of aux vectors for sanity. */
-    ElfW(auxv_t)* auxv = (ElfW(auxv_t)*)&cookies[cnt];
+    /* NOTE: LibOS implements its own ELF aux vectors. Any info from host's aux vectors must be
+     * passed in PAL_CONTROL. Here we pass an empty list of aux vectors for sanity. */
+    ElfW(auxv_t)* auxv = (ElfW(auxv_t)*)&stack_entries[idx];
     auxv[0].a_type     = AT_NULL;
     auxv[0].a_un.a_val = 0;
 
     assert(g_entrypoint_map.l_entry);
-    CALL_ENTRY(&g_entrypoint_map, cookies);
-    die_or_inf_loop();
+#ifdef __x86_64__
+    __asm__ volatile("movq %1, %%rsp\n"
+                     "jmp *%0\n"
+                     :
+                     : "r"(g_entrypoint_map.l_entry), "r"(stack_entries)
+                     : "memory");
+#else
+#error "unsupported architecture"
+#endif
+    __builtin_unreachable();
 }

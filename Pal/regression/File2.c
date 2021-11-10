@@ -5,7 +5,7 @@
 
 char str[12] = "Hello World";
 
-int main(int argc, char** argv, char** envp) {
+int main(int argc, char** argv) {
     pal_printf("Enter Main Thread\n");
 
     PAL_HANDLE out = NULL;

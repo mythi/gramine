@@ -2,7 +2,7 @@
 #include "pal.h"
 #include "pal_regression.h"
 
-int main(int argc, char** argv, char** envp) {
+int main(int argc, char** argv) {
     char buffer1[20] = "Hello World 1", buffer2[20] = "Hello World 2";
     char buffer3[20], buffer4[20];
     int ret;

@@ -4,7 +4,7 @@
 
 char buffer[80];
 
-int main(int argc, char** argv, char** envp) {
+int main(int argc, char** argv) {
     /* test regular directory opening */
 
     PAL_HANDLE dir1 = NULL;

@@ -19,7 +19,7 @@ static void print_hex(const char* fmt, const void* data, size_t size) {
     pal_printf(fmt, hex_buf);
 }
 
-int main(int argc, char** argv, char** envp) {
+int main(int argc, char** argv) {
     int ret;
 
     /* test regular file opening */

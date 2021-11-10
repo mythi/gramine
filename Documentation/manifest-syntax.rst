@@ -73,7 +73,7 @@ implementation: ``libsysdb.so``.
 Note that the loader (the PAL binary) loads the LibOS binary specified in
 ``loader.entrypoint`` and passes control to this binary. Next, the LibOS binary
 loads the actual executable (the user application) specified in
-``libos.entrypoint``. Also note that, in constrast to ``libos.entrypoint``, the
+``libos.entrypoint``. Also note that, in contrast to ``libos.entrypoint``, the
 ``loader.entrypoint`` option specifies a PAL URI (with the ``file:`` prefix).
 
 LibOS Entrypoint
