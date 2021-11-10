@@ -631,12 +631,12 @@ noreturn void start_execution(const char** arguments, const char** environs) {
      *   8(%rsp)               argv[0]
      *   16(%rsp)              argv[1]
      *   ...
-     *   (8*argc)(%rsp)        argv[argc] = NULL
-     *   (8*(argc+1))(%rsp)    envp[0]
-     *   (8*(argc+2))(%rsp)    envp[1]
+     *   (8*(argc+1))(%rsp)    argv[argc] = NULL
+     *   (8*(argc+2))(%rsp)    envp[0]
+     *   (8*(argc+3))(%rsp)    envp[1]
      *   ...
-     *   (8*(argc+n))(%rsp)    envp[n] = NULL
-     *   (8*(argc+n+1))(%rsp)  auxv[0] = AT_NULL
+     *   (8*(argc+n+2))(%rsp)  envp[n] = NULL
+     *   (8*(argc+n+3))(%rsp)  auxv[0] = AT_NULL
      *
      * See also the corresponding LibOS entrypoint: LibOS/shim/src/arch/x86_64/start.S
      */
@@ -649,20 +649,20 @@ noreturn void start_execution(const char** arguments, const char** environs) {
         environs_num++;
 
     /* 1 for argc stack entry, 1 for argv[argc] == NULL, 1 for envp[n] == NULL */
-    size_t stack_entries_size = 3 * sizeof(uintptr_t);
-    stack_entries_size += (arguments_num + environs_num) * sizeof(uintptr_t);
+    size_t stack_entries_size = 3 * sizeof(void*);
+    stack_entries_size += (arguments_num + environs_num) * sizeof(void*);
     stack_entries_size += 1 * sizeof(ElfW(auxv_t));
 
-    uintptr_t* stack_entries = __alloca(stack_entries_size);
+    const void** stack_entries = __alloca(stack_entries_size);
 
     size_t idx = 0;
-    stack_entries[idx++] = (uintptr_t)arguments_num;
+    stack_entries[idx++] = (void*)arguments_num;
     for (size_t i = 0; i < arguments_num; i++)
-        stack_entries[idx++] = (uintptr_t)arguments[i];
-    stack_entries[idx++] = 0x00;
+        stack_entries[idx++] = arguments[i];
+    stack_entries[idx++] = NULL;
     for (size_t i = 0; i < environs_num; i++)
-        stack_entries[idx++] = (uintptr_t)environs[i];
-    stack_entries[idx++] = 0x00;
+        stack_entries[idx++] = environs[i];
+    stack_entries[idx++] = NULL;
 
     /* NOTE: LibOS implements its own ELF aux vectors. Any info from host's aux vectors must be
      * passed in PAL_CONTROL. Here we pass an empty list of aux vectors for sanity. */
